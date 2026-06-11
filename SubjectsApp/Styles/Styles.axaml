@@ -1,0 +1,21 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!-- Add Controls for Previewer Here -->
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="ToggleButton PathIcon.open">
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+    <Style Selector="ToggleButton:checked PathIcon.open">
+        <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="ToggleButton PathIcon.close">
+        <Setter Property="IsVisible" Value="False"/>
+    </Style>
+    <Style Selector="ToggleButton:checked PathIcon.close">
+        <Setter Property="IsVisible" Value="True"/>
+    </Style>
+</Styles>

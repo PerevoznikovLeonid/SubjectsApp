@@ -1,0 +1,50 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:SubjectsApp.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:SubjectsApp.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="SubjectsApp.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="SubjectsApp">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,*">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
+            <ToggleButton Name="PaneToggle"
+                          IsChecked="{Binding ElementName=SplitView, Path=IsPaneOpen}"
+                          Content="☰ Студенты"
+                          FontSize="16">
+                
+            </ToggleButton>
+        </StackPanel>
+
+        <SplitView x:Name="SplitView"
+                   Grid.Row="1"
+                   IsPaneOpen="{Binding #PaneToggle.IsChecked, Mode=TwoWay}"
+                   DisplayMode="Inline"
+                   OpenPaneLength="230">
+            <SplitView.Pane>
+                <views:StudentsView DataContext="{Binding Students}" Margin="4"/>
+            </SplitView.Pane>
+
+            <SplitView.Content>
+                <Grid RowDefinitions="Auto,*" Margin="8">
+                    <!-- Информация о выбранном студенте -->
+                    <TextBlock Grid.Row="0" FontSize="20" FontWeight="Bold"
+                               Text="{Binding Students.SelectedStudent.FullName, FallbackValue='Выберите студента'}"/>
+
+                    <!-- Список предметов и добавление -->
+                    <views:SubjectsView Grid.Row="1" DataContext="{Binding Subjects}"/>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+    </Grid>
+</Window>
