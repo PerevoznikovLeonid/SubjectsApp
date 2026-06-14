@@ -1,48 +1,28 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive.Linq;
 using ReactiveUI.SourceGenerators;
-using SubjectsApp.Models;
 
 namespace SubjectsApp.ViewModels;
 
-public partial class SubjectsViewModel: ViewModelBase
+public partial class SubjectsViewModel(ObservableCollection<string> sharedSubjects) : ViewModelBase
 {
-    public ObservableCollection<string> AvailableSubjects { get; } = 
-    [
-        "Математика",
-        "Физика",
-        "История",
-        "Химия"
-    ];
+    public ObservableCollection<string> Subjects { get; } = sharedSubjects;
 
-    [Reactive] private ObservableCollection<string> _studentSubjects = [];
+    [Reactive] private string _newSubjectName = string.Empty;
 
-    private readonly IObservable<Student?> _selectedStudent;
-    
-    public SubjectsViewModel(IObservable<Student?> selectedStudent)
+    [ReactiveCommand]
+    private void AddSubject()
     {
-        _selectedStudent = selectedStudent;
+        if (string.IsNullOrWhiteSpace(NewSubjectName)
+            || Subjects.Contains(NewSubjectName))
+            return;
         
-        _selectedStudent.Subscribe(student =>
-        {
-            StudentSubjects = student != null
-                ? new ObservableCollection<string>(student.Subjects)
-                : [];
-        });
+        Subjects.Add(NewSubjectName);
+        NewSubjectName = string.Empty;
     }
 
     [ReactiveCommand]
-    private void AddSubject(string subject)
+    private void RemoveSubject(string subject)
     {
-        Student? currentStudent = null;
-        _selectedStudent.Take(1).Subscribe(s => currentStudent = s);
-
-        if (currentStudent == null || string.IsNullOrWhiteSpace(subject)) return;
-        if (currentStudent.Subjects.Contains(subject)) return;
-
-        currentStudent.Subjects.Add(subject);
-        StudentSubjects = new ObservableCollection<string>(currentStudent.Subjects);
+        Subjects.Remove(subject);
     }
 }

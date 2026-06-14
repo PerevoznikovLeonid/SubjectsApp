@@ -1,23 +1,43 @@
-﻿using ReactiveUI;
+﻿using System.Collections.ObjectModel;
+using ReactiveUI;
 using ReactiveUI.SourceGenerators;
 
 namespace SubjectsApp.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public StudentsViewModel Students { get; }
-    public SubjectsViewModel Subjects { get; }
+    public ObservableCollection<string> AllSubjects { get; } =
+    [
+        "Математика",
+        "Физика",
+        "История",
+        "Программирование"
+    ];
 
-    [Reactive]
-    private ViewModelBase _currentView;
+    public StudentsViewModel StudentsVm { get; }
+    public SubjectsViewModel SubjectsVm { get; }
+
+    [Reactive] private ViewItem _currentView;
+
+    public ObservableCollection<ViewItem> Views { get; }
 
     public MainWindowViewModel()
     {
-        Students = new StudentsViewModel();
-        
-        Subjects = new SubjectsViewModel(
-            Students.WhenAnyValue(x => x.SelectedStudent));
-        
-        CurrentView = Students;
+        StudentsVm = new StudentsViewModel(AllSubjects);
+        SubjectsVm = new SubjectsViewModel(AllSubjects);
+
+        Views =
+        [
+            new ViewItem { Name = "Студенты", ViewModel = StudentsVm },
+            new ViewItem { Name = "Предметы", ViewModel = SubjectsVm }
+        ];
+
+        CurrentView = Views[0];
     }
+}
+
+public class ViewItem
+{
+    public required string Name { get; init; }
+    public required ReactiveObject ViewModel { get; init; }
 }

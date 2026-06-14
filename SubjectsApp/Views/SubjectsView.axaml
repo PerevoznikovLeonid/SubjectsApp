@@ -7,30 +7,30 @@
              x:Class="SubjectsApp.Views.SubjectsView"
              x:DataType="vm:SubjectsViewModel"
              x:Name="Control">
-    <Grid RowDefinitions="Auto,*">
-        <Expander Grid.Row="0" Header="Текущие предметы" IsExpanded="True" Margin="0,4">
-            <ItemsControl ItemsSource="{Binding StudentSubjects}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <TextBlock Text="{Binding}" Margin="2"/>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Expander>
-
-        <Expander Grid.Row="1" Header="Доступные предметы" IsExpanded="True">
-            <ItemsControl ItemsSource="{Binding AvailableSubjects}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <StackPanel Orientation="Horizontal" Spacing="8" Margin="2">
-                            <TextBlock Text="{Binding}" VerticalAlignment="Center" MinWidth="120"/>
-                            <Button Content="Добавить"
-                                    Command="{Binding ViewModel.AddSubjectCommand, ElementName=Control}"
-                                    CommandParameter="{Binding}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Expander>
+    <Grid RowDefinitions="Auto,*" Margin="8">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="4,4,4,8">
+            <TextBox Text="{Binding NewSubjectName}" 
+                     PlaceholderText="Новый предмет" 
+                     Width="150"/>
+            <Button Command="{Binding AddSubjectCommand}">Добавить</Button>
+        </StackPanel>
+        
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding Subjects}"
+                 HorizontalAlignment="Left"
+                 Margin="4">
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <StackPanel Orientation="Horizontal" Spacing="8" Margin="4,2">
+                        <TextBlock Text="{Binding}"
+                                   VerticalAlignment="Center"
+                                   MinWidth="150"/>
+                        <Button Content="Удалить"
+                                Command="{Binding ViewModel.RemoveSubjectCommand, ElementName=Control}"
+                                CommandParameter="{Binding}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>

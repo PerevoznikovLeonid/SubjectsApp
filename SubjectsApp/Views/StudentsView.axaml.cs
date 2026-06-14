@@ -1,11 +1,12 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using SubjectsApp.ViewModels;
 
 namespace SubjectsApp.Views;
 
 public partial class StudentsView : UserControl
 {
+    public StudentsViewModel? ViewModel => DataContext as StudentsViewModel;
+    
     public StudentsView()
     {
         InitializeComponent();

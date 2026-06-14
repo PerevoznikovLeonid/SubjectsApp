@@ -9,42 +9,42 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="SubjectsApp">
+    <Window.Resources>
+        <DataTemplate x:Key="PaneItemTemplate"
+                      DataType="{x:Type vm:ViewItem}">
+            <TextBlock Text="{Binding Path=Name, Mode=OneWay}"
+                       Margin="8,4"/>
+        </DataTemplate>
+    </Window.Resources>
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
-    <Grid RowDefinitions="Auto,*">
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="4">
-            <ToggleButton Name="PaneToggle"
-                          IsChecked="{Binding ElementName=SplitView, Path=IsPaneOpen}"
-                          Content="☰ Студенты"
-                          FontSize="16">
-                
+    <DockPanel LastChildFill="True">
+        <StackPanel Orientation="Vertical">
+            <ToggleButton IsChecked="{Binding ElementName=SplitView, Path=IsPaneOpen}"
+                          Margin="4">
+                <Panel>
+                    <PathIcon Classes="open"
+                              Data="{StaticResource ChevronRightRegular}" />
+                    <PathIcon Classes="close"
+                              Data="{StaticResource ChevronLeftRegular}" />
+                </Panel>
             </ToggleButton>
+            
+            <SplitView x:Name="SplitView"
+                       PanePlacement="Left"
+                       DisplayMode="CompactOverlay"
+                       OpenPaneLength="150"
+                       CompactPaneLength="30">
+                <SplitView.Pane>
+                    <ListBox ItemsSource="{Binding Path=Views}"
+                             SelectedItem="{Binding Path=CurrentView}"
+                             ItemTemplate="{StaticResource PaneItemTemplate}"
+                             VerticalAlignment="Top"/>
+                </SplitView.Pane>
+                
+                <SplitView.Content>
+                    <ContentControl Content="{Binding Path=CurrentView.ViewModel}"/>
+                </SplitView.Content>
+            </SplitView>
         </StackPanel>
-
-        <SplitView x:Name="SplitView"
-                   Grid.Row="1"
-                   IsPaneOpen="{Binding #PaneToggle.IsChecked, Mode=TwoWay}"
-                   DisplayMode="Inline"
-                   OpenPaneLength="230">
-            <SplitView.Pane>
-                <views:StudentsView DataContext="{Binding Students}" Margin="4"/>
-            </SplitView.Pane>
-
-            <SplitView.Content>
-                <Grid RowDefinitions="Auto,*" Margin="8">
-                    <!-- Информация о выбранном студенте -->
-                    <TextBlock Grid.Row="0" FontSize="20" FontWeight="Bold"
-                               Text="{Binding Students.SelectedStudent.FullName, FallbackValue='Выберите студента'}"/>
-
-                    <!-- Список предметов и добавление -->
-                    <views:SubjectsView Grid.Row="1" DataContext="{Binding Subjects}"/>
-                </Grid>
-            </SplitView.Content>
-        </SplitView>
-    </Grid>
+    </DockPanel>
 </Window>

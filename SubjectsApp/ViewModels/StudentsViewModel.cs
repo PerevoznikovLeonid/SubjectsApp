@@ -15,11 +15,9 @@ public partial class StudentsViewModel: ViewModelBase
         new() { FirstName = "Алексей", LastName = "Смирнов" }
     ];
     
-    [Reactive]
-    private Student? _selectedStudent;
+    [Reactive] private Student? _selectedStudent;
 
-    [Reactive]
-    private ObservableCollection<string> _studentSubjects = [];
+    [Reactive] private ObservableCollection<string> _studentSubjects = [];
 
     public ObservableCollection<string> AvailableSubjects { get; }
 
@@ -39,10 +37,23 @@ public partial class StudentsViewModel: ViewModelBase
     [ReactiveCommand]
     private void AddSubject(string subject)
     {
-        if (SelectedStudent == null || string.IsNullOrWhiteSpace(subject)) return;
+        if (SelectedStudent == null || string.IsNullOrWhiteSpace(subject))
+            return;
 
-        if (SelectedStudent.Subjects.Contains(subject)) return;
+        if (SelectedStudent.Subjects.Contains(subject))
+            return;
+        
         SelectedStudent.Subjects.Add(subject);
+        StudentSubjects = new ObservableCollection<string>(SelectedStudent.Subjects);
+    }
+    
+    [ReactiveCommand]
+    private void RemoveSubject(string subject)
+    {
+        if (SelectedStudent == null || string.IsNullOrWhiteSpace(subject))
+            return;
+
+        SelectedStudent.Subjects.Remove(subject);
         StudentSubjects = new ObservableCollection<string>(SelectedStudent.Subjects);
     }
 }
