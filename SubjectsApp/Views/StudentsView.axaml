@@ -32,7 +32,6 @@
                                 <Button Content="Удалить"
                                         Command="{Binding ViewModel.RemoveSubjectCommand, ElementName=Control}"
                                         CommandParameter="{Binding}"
-                                        Classes="danger"
                                         Margin="4,0,0,0"/>
                             </StackPanel>
                         </DataTemplate>
